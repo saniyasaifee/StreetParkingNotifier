@@ -1,0 +1,291 @@
+{% extends 'mybase.html' %}
+{% block head %}
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Reverse Geocoding</title>
+
+     <style>
+     html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+      .controls {
+        margin-top: 16px;
+        border: 1px solid transparent;
+        border-radius: 2px 0 0 2px;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        height: 32px;
+        outline: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      }
+
+      #pac-input {
+        background-color: #fff;
+        padding: 0 11px 0 13px;
+        width: 400px;
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+        text-overflow: ellipsis;
+      }
+
+      #pac-input:focus {
+        border-color: #4d90fe;
+        margin-left: -1px;
+        padding-left: 14px;  /* Regular padding-left + 1. */
+        width: 401px;
+      }
+
+      .pac-container {
+        font-family: Roboto;
+      }
+
+      #type-selector {
+        color: #fff;
+        background-color: #4d90fe;
+        padding: 5px 11px 0px 11px;
+      }
+
+      #type-selector label {
+        font-family: Roboto;
+        font-size: 13px;
+        font-weight: 300;
+      }
+}
+
+     </style>
+ <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&libraries=places"></script>
+
+    <script>
+// Note: This example requires that you consent to location sharing when
+// prompted by your browser. If you see a blank space instead of the map, this
+// is probably because you have denied permission for location sharing.
+
+var geocoder;
+var map;
+var infowindow = new google.maps.InfoWindow({maxWidth:200,map: map});
+var marker;
+
+
+function initialize() {
+    geocoder = new google.maps.Geocoder();
+    var mapOptions = {
+	zoom: 15
+    };
+    map = new google.maps.Map(document.getElementById('map_canvas'),mapOptions);
+    var input = /** @type {HTMLInputElement} */(document.getElementById('pac-input'));
+    var types = document.getElementById('type-selector');
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(types);
+    var autocomplete = new google.maps.places.Autocomplete(input);
+    autocomplete.bindTo('bounds', map);
+
+    // Try HTML5 geolocation
+    if(navigator.geolocation) {
+	var timeoutVal = 10 * 1000 * 1000;	
+	navigator.geolocation.getCurrentPosition(function(position) {
+	    var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+	    codeLatLng(position.coords.latitude, position.coords.longitude)
+	     marker = new google.maps.Marker({
+		map:map,
+		draggable:true,
+		position: pos
+	    });
+	    google.maps.event.addListener(autocomplete, 'place_changed', function() {
+		infowindow.close();
+		marker.setVisible(false);
+		var place = autocomplete.getPlace();
+		if (!place.geometry) {
+		    return;
+		}
+		 // If the place has a geometry, then present it on a map.
+		if (place.geometry.viewport) {
+		    map.fitBounds(place.geometry.viewport);
+		} else {
+		    map.setCenter(place.geometry.location);
+		    map.setZoom(15);  // Why 17? Because it looks good.
+		}
+		marker.setIcon(/** @type {google.maps.Icon} */({
+		url: place.icon,
+		size: new google.maps.Size(71, 71),
+		origin: new google.maps.Point(0, 0),
+		anchor: new google.maps.Point(17, 34),
+		scaledSize: new google.maps.Size(35, 35)
+	    }));
+	     marker.setPosition(place.geometry.location);
+    marker.setVisible(true);
+
+    var address = '';
+    if (place.address_components) {
+      address = [
+        (place.address_components[0] && place.address_components[0].short_name || ''),
+        (place.address_components[1] && place.address_components[1].short_name || ''),
+        (place.address_components[2] && place.address_components[2].short_name || '')
+      ].join(' ');
+    }
+
+    infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+    infowindow.open(map, marker);
+  });
+
+  // Sets a listener on a radio button to change the filter type on Places
+  // Autocomplete.
+  function setupClickListener(id, types) {
+    var radioButton = document.getElementById(id);
+    google.maps.event.addDomListener(radioButton, 'click', function() {
+      autocomplete.setTypes(types);
+    });
+  }
+
+  setupClickListener('changetype-all', []);
+  setupClickListener('changetype-establishment', ['establishment']);
+  setupClickListener('changetype-geocode', ['geocode']);
+
+	    
+
+	    google.maps.event.addListener(marker, 'click',  function() {
+		    //codeLatLng(event.latLng)
+		    infowindow.open(map,marker);
+		});
+	    google.maps.event.addListener(map, 'click', function(event){
+		codeLatLng(event.latLng.lat(),event.latLng.lng());
+	    });
+	    map.setCenter(pos);
+	    }, function() {
+		handleNoGeolocation(true);
+	},{enableHighAccuracy:true, timeout: timeoutVal, maximumAge:0});
+    }
+    else {
+	// Browser doesn't support Geolocation
+	handleNoGeolocation(false);
+    }
+}
+
+function codeLatLng(lat, lng) {
+    var latlng = new google.maps.LatLng(lat, lng);
+    geocoder.geocode({'latLng': latlng}, function(results, status) {
+    if (status == google.maps.GeocoderStatus.OK) {
+      if (results[1]) {
+        map.setZoom(17);
+	marker.setMap(null);
+        marker = new google.maps.Marker({
+            position: latlng,
+            map: map,
+	    draggable:true
+	    
+        });
+        infowindow.setContent(results[1].formatted_address);
+        infowindow.open(map, marker);
+	document.getElementById('pac-input').value = results[1].formatted_address
+	lat = lat.toFixed(6);
+	lng = lng.toFixed(6);
+	document.getElementById('id_latitude').value =  lat
+	document.getElementById('id_longitude').value =  lng
+	var mLatLang = marker.getPosition().toUrlValue(); //get marker position
+	var myData = {latlng : mLatLang,csrfmiddlewaretoken: '{{ csrf_token }}'}
+	//alert(mLatLang)
+	$.ajax({
+	    type: "POST",
+	    url: "reverseGeocode/",
+	    dataType: "json",
+	    data: myData,
+	    success:function(json){
+		document.getElementById('pac-input').value = json.formatted_address
+		document.getElementById('id_latitude').value = json.latitude
+		document.getElementById('id_longitude').value = json.longitude
+		document.getElementById('id_main_street').value = json.mainstreet
+		var ddl = document.getElementById('id_boroughcode');
+		var opts = ddl.options.length;
+		for (var i=0; i<opts; i++){
+		    if (ddl.options[i].text == json.borough){
+			ddl.options[i].selected = true;
+		    
+		    }
+		}
+		infowindow.setContent(json.formatted_address);
+		infowindow.open(map, marker);
+	    },error:function (xhr, ajaxOptions, thrownError){
+		alert("error")
+		alert(thrownError); //throw any errors
+	    }
+	});
+      } else {
+        alert('No results found');
+      }
+    } else {
+      alert('Geocoder failed due to: ' + status);
+    }
+  });
+}
+
+function handleNoGeolocation(errorFlag) {
+  if (errorFlag) {
+    var content = 'Error: The Geolocation service failed.';
+  } else {
+    var content = 'Error: Your browser doesn\'t support geolocation.';
+  }
+
+  var options = {
+    map: map,
+    position: new google.maps.LatLng(60, 105),
+    content: content
+  };
+
+  var infowindow = new google.maps.InfoWindow(options);
+  map.setCenter(options.position);
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+
+{% endblock%}
+
+{% block content %}
+<input id="pac-input" class="controls" type="text"
+        placeholder="Enter a location">
+    <div id="type-selector" class="controls">
+      <input type="radio" name="type" id="changetype-all" checked="checked">
+      <label for="changetype-all">All</label>
+
+      <input type="radio" name="type" id="changetype-establishment">
+      <label for="changetype-establishment">Establishments</label>
+
+      <input type="radio" name="type" id="changetype-geocode">
+      <label for="changetype-geocode">Geocodes</label>
+    </div>
+
+    
+
+    <form method = 'POST' action =''>{% csrf_token %}
+    
+        {{form.as_p}}
+	<!--
+	  {% for field in form %}
+	    {{ field }}
+	  {% endfor %}
+	--> 
+        <input type ='submit' value='Save'></input>
+     
+
+	<p>
+	{% if messages %}
+		<div class="span12">
+		<strong style="color: red;">
+		{% for message in messages %}
+		    <div class="alert alert-{{ message.tags }}">
+			{{ message|safe }}
+		    </div>
+		{% endfor %}
+		</strong>
+		</div>
+	{% endif %}
+	</p>    
+    </form>
+    
+     <div id="map_canvas" style="width: 80%px; height: 600px"></div>
+
+
+{% endblock %}

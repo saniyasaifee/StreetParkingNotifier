@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Settings{% endblock %}
+
+{% block bootstrap %}
+  <!--<link href="{{ BASE_DIR }}/static/css/index.css" rel="stylesheet">-->
+{% endblock %}
+
+<link rel="stylesheet" href="{{STATIC_URL}}css/homepage.css">
+{% block extra_head %}{% endblock %}
+{% block content %}
+<div id= "topleft">
+{% include "slide.html" %}
+</div>  
+<div class="container" id="topright">
+<form class="form-signin" role="form" method="post" action="">{% csrf_token %}
+  <h2 class="form-signin-heading">Customize Settings</h2>
+	<p style="color"blue"><strong>I would prefer to</strong></p>
+        <label class="checkbox">
+          <input type="checkbox" value="remember-me" checked>receive Email</label>
+      <label class="checkbox">
+          <input type="checkbox" value="remember-me">receive text message</label>
+      <label class="checkbox">
+          <input type="checkbox" value="remember-me">get a phone call</label>
+	<label for="notification"><strong>Notify me before</strong></label>
+	<select name="notification" id="hour">
+	<option value="" size="40">select any</option>
+	<option value="" size="40">1 hour</option>
+	<option value="" size="40">2 hour</option>
+	<option value="" size="40">3 hour</option>
+	</select><br>
+        Alternative email address:<input type="text" placeholder="example:youremail@gmail.com" name = "emailaddress" size="40" value={{form.new_email}}>
+        Alternative phone number:<input type="text" placeholder="example:212-333-4444" name = "phonenumber" size="40">
+        <button class="btn btn-lg btn-primary btn-block" type="submit" size="40">Save</button>
+	<br>
+	<div class="fb-like" data-href="https://127.0.0.1:8000/" data-layout="button" data-action="like" data-show-faces="false" data-share="true"></div>
+        <div align='center'>        
+</form>
+
+{% endblock %}

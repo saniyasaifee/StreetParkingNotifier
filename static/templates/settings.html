@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Settings{% endblock %}
+
+{% block bootstrap %}
+  <!--<link href="{{ BASE_DIR }}/static/css/index.css" rel="stylesheet">-->
+{% endblock %}
+{% block content %}
+  <link rel="stylesheet" href="{{STATIC_URL}}css/homepage.css">
+ <div id="topleft">
+  <br>
+   <p style="color: green; font-size:14"> Click <a href="/editinfo/">edit profile</a> to update profile information</p>
+    <br>
+  <img src="{{ STATIC_URL }}img/photo/parking2.png" alt="banner" width="80%" height="80%">
+ </div> 
+<div id="topright">
+<form name="settings" method="post" action="/whereiam/">{% csrf_token %}
+  <h2 style="background-color:blue;color:white; font-size:150%;"<strong>Customize Settings</strong>
+</h2><br>
+<p style="color:green">Hello {{ request.user}},</p>
+  <p style="color: green;">Customize the notification so that our app doesn't interrupt your daily activiy!</p>
+  <br>
+  <label for ="id_Preference">I prefer to be notified through-</label>
+  {{form.Preference}}
+  <br>
+  <label for ="id_Notification">Notify me before-</label>
+  {{form.Notification}}
+  <br>
+  <label for ="id_Phone">Phone Number(required)</label>
+  {{form.Phone}}
+  <br>
+  <label for ="id_Email">Alternative email address</label>
+  {{form.Email}}
+  <br>
+<input type='submit' value="update"/>
+</form>
+</div>
+{% endblock %}

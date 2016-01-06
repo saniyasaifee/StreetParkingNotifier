@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+<style>
+body
+{
+background:#d0e4fe;
+background-size:100% 100%;
+background-repeat:no-repeat;
+}
+</style>
+{% block content %}
+  <link rel="stylesheet" href="{{STATIC_URL}}css/homepage.css">
+ <div id="topleft">
+  <img src="{{ STATIC_URL }}img/photo/contactus3.png" alt="contact" width="100%" height="120%">    
+ </div>     
+<div id="topright">
+<p style="background-color:blue;color:white; font-size:150%;"<strong>Contact us- </strong>
+</p>
+<p style="font-family:verdana;font-size:110%;color:green">
+</p>
+<fieldset>
+<legend>Amulya Tripuraneni:</legend>
+<p>Graduate Student</p>
+<p>Computer Science, CCNY</p>
+<a href="amulya.tripuraneni@gmail.com">amulya.tripuraneni@gmail.com</a>
+</fieldset>
+<br>
+<fieldset>
+<legend>Julia Marina:</legend>
+<p>Graduate Student</p>
+<p>Computer Science, CCNY</p>
+<a href="juliamarina777@gmail.com">juliamarina777@gmail.com</a>
+</fieldset>
+<br>
+<fieldset>
+<legend>Mithila M. Chowdhury:</legend>
+<p>Graduate Student</p>
+<p>Computer Science, CCNY</p>
+<a href="mithilachwdhry@gmail.com">mithilachwdhry@gmail.com</a>
+</fieldset>
+<br>
+<fieldset>
+<legend>saniya saifee:</legend>
+<p>Graduate Student</p>
+<p>Computer Science, CCNY</p>
+<a href="saniya.saifee@gmail.com">saniya.saifee@gmail.com</a>
+</fieldset>
+</div>
+{% endblock %}

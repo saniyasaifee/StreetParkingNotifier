@@ -1,0 +1,148 @@
+{% extends 'mybase.html' %}
+{% block head %}
+  <!--<h2><font color="#79B5D7">You are here</font></h2>-->
+  <h2><font color="#58839C">You are here</font></h2>
+   
+    <title>Simple Leaflet Map</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link 
+        rel="stylesheet" 
+        href="http://cdn.leafletjs.com/leaflet-0.7/leaflet.css"
+    />
+    
+    <script
+        src="http://cdn.leafletjs.com/leaflet-0.7/leaflet.js">
+    </script>
+
+    <script type="text/javascript">
+	//check geolocator
+    	
+    window.onload = function()
+    {
+      initial();
+    };
+	
+    function initial()
+    {
+        var lat;
+	var lng;
+		 
+		
+        if (navigator.geolocation) 
+		{
+		var timeoutVal = 10 * 1000 * 1000;	
+		navigator.geolocation.getCurrentPosition(
+			gotPosition,
+			errorGettingPosition,
+				{enableHighAccuracy:true, timeout: timeoutVal, maximumAge:0});
+		}
+		else{
+				alert("Geolocation is not supported by this browser");
+			}		
+				
+		 function gotPosition(pos)
+			{
+			var outputStr =
+				"latitude:"+ pos.coords.latitude +"<br>"+
+				"longitude:"+ pos.coords.longitude +"<br>"+
+				"accuracy:"+ pos.coords.accuracy +"<br>"+
+				"altitude:"+ pos.coords.altitude +"<br>"+
+				"altitudeAccuracy:"+ pos.coords.altitudeAccuracy +"<br>"+
+				"heading:"+ pos.coords.heading +"<br>"+
+				"speed:"+ pos.coords.speed +"";
+
+				//document.getElementById("Output").innerHTML=outputStr;
+				var latitude = pos.coords.latitude;
+				var longitude = pos.coords.longitude;
+				
+				lat = latitude.toFixed(5);
+				lng = longitude.toFixed(5);
+				
+				document.getElementById('id_latitude').value = lat
+				document.getElementById('id_longitude').value = lng
+				
+				//set up map
+				var map = L.map('map').setView([latitude, longitude], 17);
+				mapLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>';
+				L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', 
+							{attribution: 'Map data &copy; ' + mapLink,
+							 maxZoom: 22,
+							}).addTo(map);
+				var marker = L.marker([latitude, longitude], {draggable: true})
+			                    .addTo(map) 
+								.bindPopup("Your ass is here : "+lat +"  " + lng +"<p> Timestamp: " + parseTimestamp(pos.timestamp)+"</p>")
+								.openPopup();
+								
+				//click on map
+                var popup = L.popup();
+
+				function onMapClick(e) {
+					popup
+						.setLatLng(e.latlng)
+						.setContent("You clicked the map at " + e.latlng.toString())
+						.openOn(map);
+				}
+
+				map.on('click', onMapClick);
+				
+			}	//end of gotPosition	
+		  
+		 function errorGettingPosition(error)
+		{
+			var errors = { 
+				1: 'Permission denied',
+				2: 'Position unavailable',
+				3: 'Request timeout'
+			};
+			alert("Error: " + errors[error.code]);
+		}
+		function parseTimestamp(timestamp)
+		{
+			var d = new Date(timestamp);
+			var day = d.getDate();
+			var month = d.getMonth() + 1;
+			var year = d.getFullYear();
+			var hour = d.getHours();
+			var mins = d.getMinutes();
+			var secs = d.getSeconds();
+			var msec = d.getMilliseconds();
+			return day + "." + month + "." + year + " " + hour + ":" + mins + ":" + secs + "," + msec;
+		}
+		//set up form field value
+		
+	       	
+	} //end of initial	 
+			
+    </script>
+
+{% endblock%}
+
+{% block content %}
+
+    <div style='background-color:#CCD9E0'>   
+    <form method = 'POST' action =''  >{% csrf_token %}
+        <p>
+        {{form.as_p}}
+	</p>       
+        <input type ='submit' value='Save'></input>
+     
+
+	<p>
+	{% if messages %}
+		<div class="span12">
+		<strong style="color: red;">
+		{% for message in messages %}
+		    <div class="alert alert-{{ message.tags }}">
+			{{ message|safe }}
+		    </div>
+		{% endfor %}
+		</strong>
+		</div>
+	{% endif %}
+	</p>    
+    </form>
+    </div>
+ 
+    <div id="map" style="width: 80%px; height: 600px; "></div>
+    
+{% endblock %}

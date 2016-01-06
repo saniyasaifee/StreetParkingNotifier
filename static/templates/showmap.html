@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block head %}
+  <h1>Google Map</h1>
+        
+<meta content="en" http-equiv="content-language">
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css" />
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script> <script src=http://maps.googleapis.com/maps/api/js?sensor=true></script>
+  
+<script type="text/javascript">  
+
+
+       
+//a basic example of using the Google Maps directions service in a jQuery Mobile page.
+            $(document).on("pageinit", "#map_page", function() {
+                initialize();
+            });
+
+            $(document).on('click', '#submit', function(e) {
+                e.preventDefault();
+                //calculateRoute();
+            });
+
+            var lat,
+                lon;
+            var map;
+
+            function initialize() 
+            {
+                
+                var NewYork = new google.maps.LatLng(40.7711329, -73.9741874); //Central Manhatten(40.704623,-73.986605); 
+
+                var myOptions = {
+                    zoom:15,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                    center: NewYork
+                }
+
+                map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+                var marker = new google.maps.Marker
+                 ({
+                  position: NewYork,
+                  map: map,
+                  title: 'You are Here'
+                    });
+            } //end of init
+
+    </script>
+ 
+{% endblock%}
+
+{% block content %}
+    
+    
+        <div data-role="page" id="map_page">
+            <div data-role="header">
+                <h1><a href="#">Google Map</h1>
+            </div>
+            <div data-role="content">
+                <div class="ui-bar-c ui-corner-all ui-shadow" style="padding:1em;">
+                    <div id="map_canvas" style="height:600px;"></div>
+           
+            
+            </div>
+           </div>
+           
+<!--           
+<form method = 'POST' action =''>{%csrf_token%}
+    {{form.as_p}}
+    <input type ='submit'></input>
+</form>
+-->
+{% endblock %}

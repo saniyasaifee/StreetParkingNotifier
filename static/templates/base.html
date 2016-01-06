@@ -1,0 +1,120 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+          
+		<meta charset="UTF-8">
+		<title>{{ title|default:"Street Parking Notifier" }}</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	      
+		
+		<!-- Bootstrap -->
+		<!-- Latest compiled and minified CSS -->
+		<link href="/static/css/custom.css" rel="stylesheet">
+        
+    <!-- Bootstrap core CSS -->
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
+    <link href="/static/css/signin.css" rel="stylesheet"> 
+    <!-- Custom styles for this template -->
+    <link href="/static/css/jumbotron.css" rel="stylesheet">
+		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+		<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+	{% block head %}
+	{% endblock %}
+	{% block contactusheader%}
+	{% endblock %}
+	</head>
+	<body>
+		<!-- adding header bar -->
+		<div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#b-menu-1">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="/">Street Parking Notfier</a>
+				</div>
+				<div class="collapse navbar-collapse" id="b-menu-1">
+					<ul class="nav navbar-nav navbar-right">
+						{% if user.is_authenticated %}
+                                                <li><a href="/settings/">Settings</a></li>	
+						<li><a href="/accounts/logout" id="logout">Log out</a></li>
+
+						{% else %}
+						
+						<li><a href="/">Sign in</a></li>
+						<li><a href="/accounts/register/">Sign Up</a></li>
+						      
+					
+
+						{% endif %}
+
+						
+					</ul>
+				</div> 
+			</div> 
+		</div>
+		<!-- end of header bar-->
+
+		
+      <!-- Example row of columns -->
+      <div class="row">
+      <div class="container">
+       
+        
+        {% block content %}
+	  
+        
+        {% endblock %}
+        
+      </div></div>
+          
+
+		<!-- adding footers -->
+				<!-- adding footers -->
+		<footer>
+			<nav class="navbar navbar-inverse navbar-fixed-bottom" role="navigation">
+				<div class="container">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#b-menu-2">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+					</div>
+					<div class="collapse navbar-collapse" id="b-menu-2">
+						<ul class="nav navbar-nav navbar-left">
+							<li><a href="/features/">Features</a></li>
+							<li><a href="/bugs/">Report Bug</a></li>
+							<li><a href="/contactus/">Contact Us</a></li> 
+							
+						</ul>
+					</div>
+				</div>
+			</nav>
+		
+		<!-- end of footer -->
+
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+		<script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+	</body>
+</html>

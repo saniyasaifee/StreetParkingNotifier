@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block bootstrap %}
+  <link href="{{ BASE_DIR }}/static/css/signin.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+{# Hidden divs - revealed by jquery dialog #}
+<div class="container">
+
+<h2>Hello {{ user }}</h2>
+
+
+<h3>User Profile:</h3> 
+{% if form.errors or formuser.errors %}
+  <p class="errors">Please correct the errors below:</p>
+{% endif %}
+
+
+<form class="form-sigin" role="form" method="post" action="" class="wide">{% csrf_token %}
+  <dl>
+  <dt>
+    <label class="form-signin-heading" for="id_firstname">First Name:</label>
+    {% if form.first_name.errors %} 
+      <span class="error">{{ form.first_name.errors|join:", " }}</span>
+    {% endif %}
+  </dt>
+  <dd>{{ form.first_name }}</dd>
+  <dt>
+    <label class="form-signin-heading" for="id_last_name">Last Name:</label>
+    {% if form.last_name.errors %} 
+       <span class="error">{{ form.last_name.errors|join:", " }}</span>
+    {% endif %}
+  </dt>
+  <dd>{{ form.last_name }}</dd>
+  <dt>
+    <label class="form-signin-heading" for="id_email">E-mail:</label>
+    {% if form.email.errors %} 
+       <span class="error">{{ form.email.errors|join:", " }}</span>
+    {% endif %}
+  </dt>
+  <dd>{{ form.email }}</dd>
+  <dt>
+    <label class="form-signin-heading" for="id_phoneNumber">Phone Number:</label>
+    {% if formuser.phoneNumber.errors %} 
+       <span class="error">{{ formuser.phoneNumber.errors|join:", " }}</span>
+    {% endif %}
+  </dt>
+  <dd>{{ formuser.phoneNumber }}</dd>
+  <dt>
+    <input class="btn btn-primary" type="submit" value="Update" />
+    <a class="btn btn-primary" href="{% url 'userprofile_detail_profile' %}">Go Back</a>
+  </dt>
+  </dl>
+</form>
+
+</div>
+
+{% endblock content %}
+

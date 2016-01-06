@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block bootstrap %}
+  <!--<link href="{{ BASE_DIR }}/static/css/index.css" rel="stylesheet">-->
+{% endblock %}
+{% block content %}
+  <link rel="stylesheet" href="{{STATIC_URL}}css/homepage.css">
+ <div id="topleft">
+  <img src="{{ STATIC_URL }}img/photo/bug.jpg" alt="contact" width="100%" height="120%">    
+ </div> 
+<div id="topright">
+<form class="form-signin" role="form" method="post" action="/contactus/">{% csrf_token %}
+<legend style="background-color:blue;color:white;"><strong>Report a Bug</strong></legend>
+<p style="color:green">Hello {{ request.user }},</p>
+<p style="color:green;">We welcome problem reports, features ideas and general comments.Start by writing a brief description-</p>
+  {{form.as_p}}
+<input type='submit' value="Report">
+<p style="color:green;">Next we'll let you identify area of the page related to the bug or issue you reported.</p>
+</form>
+</div>
+{% endblock %}

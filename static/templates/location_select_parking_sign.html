@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% block head %}
+  
+    <title>Select Parking Sign</title> 
+    
+    <link 
+        rel="stylesheet" 
+        href="http://cdn.leafletjs.com/leaflet-0.7/leaflet.css"
+    />
+    
+    <script
+        src="http://cdn.leafletjs.com/leaflet-0.7/leaflet.js">
+    </script>
+
+    <script type="text/javascript">
+
+    //initial values
+    var latitude = 40.7711329;   
+    var longitude = -73.9741874; 
+    
+    {% if latitude %}
+        latitude =   {{ latitude }}
+    {% endif %}
+    
+    {% if longitude %}
+        longitude =   {{ longitude }}
+    {% endif %}
+    
+    
+    window.onload = function()
+    {
+      initial(latitude, longitude);
+    };
+
+    
+    function initial(latitude, longitude)
+    {
+        //set up map
+        var map = L.map('map').setView([latitude, longitude], 18);
+        mapLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>';
+        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', 
+                {attribution: 'Map data &copy; ' + mapLink,
+                 maxZoom: 22,
+                }).addTo(map);
+                var marker = L.marker([latitude, longitude], {draggable: true})
+                        .addTo(map) 
+                        .bindPopup("Your are here : <br>"+"{{ curr_address }}")
+                        .openPopup();
+
+        //click on map
+        var popup = L.popup();
+
+        function onMapClick(e)
+        {
+          popup
+          .setLatLng(e.latlng)
+          .setContent("You clicked the map at " + e.latlng.toString())
+          .openOn(map);
+        }
+
+        map.on('click', onMapClick);
+
+    } // end of initial
+
+     
+    </script>
+
+{% endblock%}
+
+{% block content %}
+
+ <div style='background-color:#CCD9E0'>
+ 
+  
+  
+  <h2 align = "left"><font color="#58839C">Please, Select Parking Sign and Time Period</font></h2>    
+  
+    <form class='LocationForm' method = 'POST' action= '/select_parking_sign/'>
+      {% csrf_token %}
+       {{ form.as_p }}
+      <div style="width: 80%px"> 
+      {% if not disable %}
+        <select id="id_signdesc"  name="signdesc" style="word-wrap:break-word; width:100%;">
+          {% for sign in signdesc %}
+           <div style="word-wrap:break-word; width:100%;">
+            <option  value="{{sign}}">{{ sign }}</option>
+           </div> 
+          {% endfor %}
+        </select>
+        <br>
+        <p>
+        <br>
+        <input type ='submit' value='Save Parking Sign'></input>
+        </p>
+      {% endif %}  
+      </div>
+      
+   
+  <!--
+  <p>
+  {% if messages %}
+    <div class="span12">
+     <strong style="color: red;">
+      <ul class="messages">
+        {% for message in messages %}
+         <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    </strong>
+    </div>  
+  {% endif %}
+  </p>
+  -->
+    <p>
+        {% if messages %}
+              <div class="span12">
+                  <strong style="color: red;">
+                  {% for message in messages %}
+                      <div class="alert alert-{{ message.tags }}">
+                        {{ message|safe }}
+                      </div>
+                  {% endfor %}
+                  </strong>
+              </div>
+        {% endif %}
+    </p> 
+    
+     </form>
+   
+   
+    <div id="map" style="width: 80%px; height: 600px"></div>
+</div>    
+
+{% endblock %}

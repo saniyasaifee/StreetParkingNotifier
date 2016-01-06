@@ -1,0 +1,13 @@
+{% extends "registration/base.html" %}
+
+{% block title %}Activation complete{% endblock %}
+
+{% block bootstrap %}
+  <link href="{{ BASE_DIR }}/static/css/index.css" rel="stylesheet">
+{% endblock %}
+{% block content %}
+  <div class="container"><h1>Congratulations!</h1>
+    <p>Your registration is now complete. Go to the site and start having fun!</p>
+    <p><a href= '{% url 'home' %}'>Sign In</a></p>
+  </div>
+{% endblock %}

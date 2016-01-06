@@ -1,0 +1,34 @@
+ 
+  {% extends "base.html" %}
+
+{% block title %}Log in{% endblock %}
+
+{% block bootstrap %}
+  <!--<link href="{{ BASE_DIR }}/static/css/index.css" rel="stylesheet">-->
+{% endblock %}
+{% block content %}
+  
+<div class="container">
+  {% if error %}
+        <div align='center' style="color: red;"><b>Your Username and password didn't match. Please try again.</b></div>
+    {% endif %}
+<form class="form-signin" role="form" method="post" action="">{% csrf_token %}
+  <h2 class="form-signin-heading">Please sign in</h2>
+        <input type="text" class="form-control" placeholder="Username" name = "username" required autofocus>
+        <input type="password" class="form-control" placeholder="Password" name = "password" required>
+        <label class="checkbox">
+          <input type="checkbox" value="remember-me"> Remember me
+        </label>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+	<br>
+	<div class="fb-like" data-href="https://127.0.0.1:8000/" data-layout="button" data-action="like" data-show-faces="false" data-share="true"></div>
+        <div align='center'>
+	<br>
+        <a href="{% url 'auth_password_reset' %}"><span>Forgot your password?</span> </a></div>
+        <div align ='center'>Don't have an account
+        <a href="/accounts/register/"><span>Create a free account</span> </a></div>
+        
+</form>
+
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %} {{ user.first_name }} {{ user.last_name }}{% endblock %}
+
+{% block bootstrap %}
+  <link href="{{ BASE_DIR }}/static/css/signin.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+
+<h2>Hello {{ user }}</h2>
+
+<div class="row">
+<div class="col-md-4">
+  <dd><a class="btn btn-primary" href="{% url 'userprofile_edit_profile' %}">Edit Profile</a></dd>
+  <p></p>
+  <dd><a class="btn btn-primary" href="{% url 'auth_password_change' %}">Change Password</a></dd>
+</div>
+<div class="col-md-4">
+  <h3>User Profile:</h3>
+  <dl>
+    <dt>
+      <label class="form-signin-heading" for="id_firstname">First Name:</label>
+    </dt>
+    <dd>{{ user.first_name }}</dd>
+    <dt>
+      <label class="form-signin-heading" for="id_last_name">Last Name:</label>
+    </dt>
+    <dd>{{ user.last_name }}</dd>
+    <dt>
+      <label class="form-signin-heading" for="id_email">E-mail:</label>
+    <dd>{{ user.email }}</dd>
+    <dt>
+      <label class="form-signin-heading" for="id_phoneNumber">Phone Number:</label>
+    </dt>
+    <dd>{{ user.userprofile.phoneNumber }}</dd>
+  </dl>
+</div>
+</div>
+</div>
+
+{% endblock content %}
+

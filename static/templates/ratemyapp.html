@@ -1,0 +1,85 @@
+<html>
+<head>
+<script src="https://cdn.firebase.com/js/client/1.0.15/firebase.js"></script>
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'></script>
+<h1 style="background-color:blue; color:white;font-size=24px;">Rate this App</h1>
+<style>
+
+body {
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 500px;
+  background-color: #f8f8f8;
+  font-size: 14px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #424547;
+ 
+}
+p {
+ font-size: 16px;
+ color:green;
+ text-align:center;
+}
+#messagesDiv {
+  background-color: white;
+  overflow: auto;
+  height: 230px;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #424547;
+  margin-bottom: 5px;
+  text-align: left;
+}
+
+#name {
+  width: 26%;
+  text-align='left'
+}
+
+#review {
+  height: 50px;
+  width: 100%;
+  text-align='left'
+}
+</style>
+<a href="https://mithila.firebaseio.com/">https://mithila.firebaseio.com/</a>
+</head>
+<body>
+<div id='messagesDiv'></div>
+Rate this App<select id='rating'>
+  <option value="High">High</option>
+  <option value="Medium">Medium</option>
+  <option value="Low">High</option>
+</select>
+<p>We welcome problem reports, features ideas and general comments<br>
+We are continously improving based on your feedback</p>
+Enter your name<br><input type='text' id='name'><br>
+write your review and hit enter<br><input type='text' id='review'>
+<script>
+
+  //Get a firebase account to sync real-time data
+  var messagesRef = new Firebase('https://mithila.firebaseio.com/');
+
+  // When the user presses enter on the message input, write the message to firebase.
+  $('#review').keypress(function (e) {
+    if (e.keyCode == 13) {
+      var name = $('#name').val();
+      var rating = $('#rating').val();
+      var text = $('#review').val();
+      messagesRef.push({name:name,rating:rating,text:text});
+      $('#review').val('');
+    }
+  });
+
+  // Add a callback the recent entry from firebase
+  messagesRef.limit(10).on('child_added', function (snapshot) {
+    var message = snapshot.val();
+    $('<div/>').text(message.text).prepend($('<em/>')
+      .text(message.name+': ').text(message.rating+':')).appendTo($('#messagesDiv'));
+    $('#messagesDiv')[0].scrollTop = $('#messagesDiv')[0].scrollHeight;
+  });
+</script>
+
+</body>
+</html>

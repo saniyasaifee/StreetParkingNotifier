@@ -1,0 +1,17 @@
+/*Home Page Content*/
+
+#topleft{
+   float: left;
+   width: 540px;
+   height: 400px;
+   z-index: 900;
+}
+
+
+#topright{
+    float: right;
+    text-align: left;
+    width: 600px;
+    height: 400px;
+    z-index: 900;
+}

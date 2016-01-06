@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block head %}
+<script type="text/javascript">
+    $('#send').on('click',function(){
+        alert("clicked");
+        $.ajax({
+            type: 'POST',
+            url: "/emailAlert",
+            data: {
+                csrfmiddlewaretoken : $('input[name="csrfmiddlewaretoken"]').val(),
+                email:$('#id_email').val(),
+                message: $('#id_message').val()
+            },
+            success: function(response)
+            {
+                alert(response);
+            }
+            });
+        });
+</script>
+{% endblock %}
+{% block content %}
+<div style='background-color:#CCD9E0'>  
+    <h1>Send Email</h1>
+    <form method = 'POST' action =''>{%csrf_token%}
+        {{form.as_p}}
+        <input type="submit" id="send" value="Send"/>
+    </form>
+    
+</div>
+{% endblock %}
